@@ -1,10 +1,10 @@
 extends CharacterBody2D
 
-
-@export var friction = 0.1
+@export var air_friction = 0.6
+@export var ground_friction = 0.1
 @export var acceleration = 0.2
 @export var speed = 200.0
-@export var jump_speed = -400.0
+@export var jump_speed = -322.0
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -19,7 +19,7 @@ func _apply_gravity(delta):
 		velocity.y += gravity * delta
 
 func _physics_process(delta):
-	# Add the gravity.
+	# Add gravity
 	self._apply_gravity(delta)
 
 	# Handle jump
@@ -27,9 +27,9 @@ func _physics_process(delta):
 		anim.play("Jump")
 		velocity.y = jump_speed
 
-	#Release jump
+	# Release jump
 	if Input.is_action_just_released("press_jump") and velocity.y < 0:
-		velocity.y = lerp(velocity.y, 0.0, acceleration)
+		velocity.y = lerp(velocity.y, 0.0, air_friction)
 		
 	if velocity.y > 0:
 		anim.play("Fall")
@@ -50,10 +50,12 @@ func _physics_process(delta):
 			anim.play("Run")
 	else:
 		if velocity.y == 0:
+			if is_equal_approx(velocity.x, 0.0):
+				anim.play("Idle")
 			if velocity.x > 0 or velocity.x < 0:
 				anim.play("Skid")
-			else:
-				anim.play("Idle")
-		velocity.x = lerp(velocity.x, 0.0, friction)
+				velocity.x = lerp(velocity.x, 0.0, ground_friction)
+		else:
+			velocity.x = lerp(velocity.x, 0.0, ground_friction)
 
 	move_and_slide()

@@ -22,7 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://bjmp7skvat78o" path="res://Graphical Assets/sprites/player/run/player-run-6.png" id="20_7lk2q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vyytc"]
-size = Vector2(18, 24)
+size = Vector2(18, 23)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_l5bgg"]
 animations = [{
@@ -327,7 +327,7 @@ _data = {
 script = ExtResource("1_443jb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, 4)
+position = Vector2(-1, 3.5)
 shape = SubResource("RectangleShape2D_vyytc")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
