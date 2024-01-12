@@ -1,15 +1,15 @@
 extends CharacterBody2D
 
 @export var air_friction = 0.6
-@export var ground_friction = 0.1
+@export var ground_friction = 0.2
 @export var acceleration = 0.2
 @export var speed = 200.0
 @export var jump_speed = -322.0
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var anim = get_node("AnimationPlayer")
 @onready var sprite = get_node("AnimatedSprite2D")
+# Get the gravity from the project settings to be synced with RigidBody nodes.
+var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _ready():
 	pass
@@ -43,19 +43,22 @@ func _physics_process(delta):
 	if direction > 0:
 		sprite.flip_h = false
 		
-		
 	if direction:
 		velocity.x = lerp(velocity.x, direction * speed, acceleration)
 		if velocity.y == 0:
 			anim.play("Run")
 	else:
 		if velocity.y == 0:
-			if is_equal_approx(velocity.x, 0.0):
-				anim.play("Idle")
 			if velocity.x > 0 or velocity.x < 0:
 				anim.play("Skid")
+				print(velocity.x as int)
 				velocity.x = lerp(velocity.x, 0.0, ground_friction)
 		else:
 			velocity.x = lerp(velocity.x, 0.0, ground_friction)
+	
+	#If on ground, check if static
+	if velocity.y == 0:
+		if is_equal_approx(velocity.x as int, 0.0):
+			anim.play("Idle")
 
 	move_and_slide()
